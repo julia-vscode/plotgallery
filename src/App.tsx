@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import Thumbnail from './Thumbnail'
+
 import './App.css';
 
-const App: React.FC = () => {
-  return (
+
+type AppState = {
+  plots: number[],
+}
+
+export class App extends Component<{}, AppState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      plots: []
+    };
+    (window as any).addPlot = this.addPlot;
+  }
+
+  addPlot = (plotIndex: number) => {
+    this.setState((state) => (
+      {
+        ...state,
+        plots: [...state.plots, plotIndex],
+      }
+    ));
+  }
+
+  render = () => (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="left-panel">
+        {this.state.plots.map((index) => <Thumbnail key={index} index={index}/>)}
+      </div>
+      <div className="main-plot">
+        The main plot.
+      </div>
     </div>
   );
+
 }
 
 export default App;
