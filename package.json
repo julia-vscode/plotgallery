@@ -10,7 +10,10 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0",
-    "typescript": "3.6.3"
+    "react-vega": "^7.0.1",
+    "typescript": "3.6.3",
+    "vega": "^5.7.2",
+    "vega-lite": "3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,5 +36,5 @@
       "last 1 safari version"
     ]
   },
-  "homepage" : "./"
+  "homepage": "./"
 }

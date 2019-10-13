@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Thumbnail from './Thumbnail'
+import Plot from './Plot';
 
 import './App.css';
 
@@ -32,7 +33,7 @@ export class App extends Component<{}, AppState> {
         {this.state.plots.map((index) => <Thumbnail key={index} index={index}/>)}
       </div>
       <div className="main-plot">
-        The main plot.
+        <Plot data={{'table': [{"x": 1,  "y": 28}, {"x": 10,  "y": 28}, {"x": 2,  "y": 55}]}} />
       </div>
     </div>
   );
