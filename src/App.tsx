@@ -6,7 +6,7 @@ import './App.css';
 
 
 type AppState = {
-  plots: number[],
+  plots: any[],
 }
 
 export class App extends Component<{}, AppState> {
@@ -18,11 +18,11 @@ export class App extends Component<{}, AppState> {
     (window as any).addPlot = this.addPlot;
   }
 
-  addPlot = (plotIndex: number) => {
+  addPlot = (data: any) => {
     this.setState((state) => (
       {
         ...state,
-        plots: [...state.plots, plotIndex],
+        plots: [...state.plots, data],
       }
     ));
   }
@@ -30,10 +30,10 @@ export class App extends Component<{}, AppState> {
   render = () => (
     <div className="App">
       <div className="left-panel">
-        {this.state.plots.map((index) => <Thumbnail key={index} index={index}/>)}
+        {this.state.plots.map((_, index) => <Thumbnail key={index} index={index}/>)}
       </div>
       <div className="main-plot">
-        <Plot data={{'table': [{"x": 1,  "y": 28}, {"x": 10,  "y": 28}, {"x": 2,  "y": 55}]}} />
+        <Plot data={this.state.plots[0] ? this.state.plots[0] : {}} />
       </div>
     </div>
   );
