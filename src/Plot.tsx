@@ -1,12 +1,14 @@
 import React from 'react';
 import { Vega } from 'react-vega';
-import { VisualizationSpec } from 'vega-embed';
+// import { VisualizationSpec } from 'vega-embed';
+import { PlotData } from './App';
 
 export type PlotProps = {
-    data: any,
+    plot: PlotData | null,
 }
 
-let spec: VisualizationSpec = 
+/* Example spec:
+addPlot({type: "vega", data:
     {
         "$schema": "https://vega.github.io/schema/vega/v5.json",
   "width": 500,
@@ -113,12 +115,20 @@ let spec: VisualizationSpec =
       ]
     }
   ]
-};
+}})*/
 
-const Plot = ({data} : PlotProps) => {
-    return (
-        <Vega spec={spec} data={data} />
-    );
+const Plot = ({plot} : PlotProps) => {
+  if (plot) {
+    switch (plot.type) {
+      case "vega":
+        return (
+          <Vega spec={plot.data} />
+        );
+      default:
+        return <p>Unsupported plot type: {plot.type}</p>
+    }
+  }
+  return null;
 }
 
 export default Plot;
