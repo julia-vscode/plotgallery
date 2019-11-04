@@ -11,15 +11,18 @@ export type PlotData = {
 
 type AppState = {
   plots: any[],
+  index: number,
 }
 
 export class App extends Component<{}, AppState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      plots: []
+      plots: [],
+      index: 0
     };
     (window as any).addPlot = this.addPlot;
+    (window as any).switchTo = this.switchTo;
   }
 
   addPlot = (plot: PlotData) => {
@@ -31,13 +34,22 @@ export class App extends Component<{}, AppState> {
     ));
   }
 
+  switchTo = (index: number) => {
+    this.setState((state) => (
+      {
+        ...state,
+        index,
+      }
+    ));
+  }
+
   render = () => (
     <div className="App">
       <div className="left-panel">
         {this.state.plots.map((_, index) => <Thumbnail key={index} index={index}/>)}
       </div>
       <div className="main-plot">
-        <Plot plot={this.state.plots[0] ? this.state.plots[0] : null} />
+        <Plot plot={this.state.plots[this.state.index] ? this.state.plots[this.state.index] : null} />
       </div>
     </div>
   );

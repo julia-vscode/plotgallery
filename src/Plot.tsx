@@ -124,6 +124,8 @@ const Plot = ({plot} : PlotProps) => {
         return (
           <Vega spec={plot.data} />
         );
+      case "image":
+        return <img src={plot.data} alt="Plot"></img>
       default:
         return <p>Unsupported plot type: {plot.type}</p>
     }
