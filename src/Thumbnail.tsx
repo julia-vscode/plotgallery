@@ -3,11 +3,12 @@ import './Thumbnail.css';
 
 export type ThumbnailProps = {
     index: number,
+    onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
 }
 
-const Thumbnail = ({index} : ThumbnailProps) => {
+const Thumbnail = ({index, onClick} : ThumbnailProps) => {
   return (
-    <div className="Thumbnail">
+    <div className="Thumbnail" onClick={onClick}>
       This is a Thumbnail with index {index}
     </div>
   );

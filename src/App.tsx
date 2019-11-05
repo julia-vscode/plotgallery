@@ -46,7 +46,7 @@ export class App extends Component<{}, AppState> {
   render = () => (
     <div className="App">
       <div className="left-panel">
-        {this.state.plots.map((_, index) => <Thumbnail key={index} index={index}/>)}
+        {this.state.plots.map((_, index) => <Thumbnail key={index} index={index} onClick={()=>{this.switchTo(index)}} />)}
       </div>
       <div className="main-plot">
         <Plot plot={this.state.plots[this.state.index] ? this.state.plots[this.state.index] : null} />
