@@ -16,10 +16,10 @@
     "vega-lite": "3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "buildcp": "react-scripts build && cp -R build/* ../ElectronDisplay.jl/assets/plotgallery",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "buildcp": "react-app-rewired build && cp -R build/* ../ElectronDisplay.jl/assets/plotgallery",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -37,5 +37,9 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "./"
+  "homepage": "./",
+  "devDependencies": {
+    "customize-cra": "^0.9.1",
+    "react-app-rewired": "^2.1.5"
+  }
 }
