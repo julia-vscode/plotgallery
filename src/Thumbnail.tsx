@@ -5,13 +5,16 @@ export type ThumbnailProps = {
     index: number,
     onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
     thumbnailURL: string | null,
+    selected: boolean,
 }
 
-const Thumbnail = ({index, onClick, thumbnailURL} : ThumbnailProps) => {
+const Thumbnail = ({index, onClick, thumbnailURL, selected} : ThumbnailProps) => {
   return (
     <div className="Thumbnail" onClick={onClick}>
-      <p>Plot {index + 1}</p>
-      {thumbnailURL && <img src={thumbnailURL} className="thumbnail-image" alt="" />}
+      <div className="column left">{index + 1}</div>
+      <div className="column right">
+        {thumbnailURL && <img src={thumbnailURL} className={selected ? "thumbnail-image-selected" : "thumbnail-image"} alt="" />}
+      </div>
     </div>
   );
 }

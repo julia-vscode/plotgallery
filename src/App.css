@@ -4,8 +4,8 @@
   height: 100%;
   left: 0;
   top: 0;
-  border: black 1px solid;
   overflow-y: scroll;
+  background-color: #e6e6e6;
 }
 
 .main-plot {
@@ -14,5 +14,4 @@
   height: 100%;
   left: 20%;
   top: 0;
-  border: black 1px solid;
 }
