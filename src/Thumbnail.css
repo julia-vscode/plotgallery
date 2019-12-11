@@ -1,10 +1,35 @@
 .Thumbnail {
-    margin: 10px;
-    border: grey solid 1px;
-    text-align: center;
-    height: 200px;
+    margin: 10px;    
+    display: flex;
+    flex-direction: row;
+}
+
+.left {
+    flex-basis: 30px;
+}
+
+.rigth {
+    width: auto;
 }
 
 .thumbnail-image {
+    border: #c6c6c6 solid 1px;
+    padding: 3px;
     width: 80%;
+}
+
+.thumbnail-image:hover {
+    border: #777777 solid 2px;
+    padding: 2px;
+}
+
+.thumbnail-image-selected {
+    border: #d24726 solid 3px;
+    padding: 1px;
+    width: 80%;
+}
+
+.thumbnail-image-selected:hover {
+    border: #f0623e solid 4px;
+    padding: 0px;
 }
