@@ -10,10 +10,10 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0",
-    "react-vega": "^7.0.1",
-    "typescript": "3.6.3",
-    "vega": "^5.7.2",
-    "vega-lite": "3"
+    "react-vega": "^7.1.1",
+    "typescript": "3.7.3",
+    "vega": "^5.9.0",
+    "vega-lite": "4"
   },
   "scripts": {
     "start": "react-scripts start",
