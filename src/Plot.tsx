@@ -38,7 +38,7 @@ const Plot = ({plot, onThumbnailUpdate} : PlotProps) => {
         
       case "image":
         if (!plot.thumbnail) {
-          plot.thumbnail = plot.data.toString();
+          onThumbnailUpdate(plot.data.toString());
         }
         return <img src={plot.data} alt="Plot"></img>
       default:

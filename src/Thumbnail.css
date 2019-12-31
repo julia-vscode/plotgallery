@@ -16,6 +16,7 @@
     border: #c6c6c6 solid 1px;
     padding: 3px;
     width: 80%;
+    background-color: white;
 }
 
 .thumbnail-image:hover {
@@ -27,6 +28,7 @@
     border: #d24726 solid 3px;
     padding: 1px;
     width: 80%;
+    background-color: white;
 }
 
 .thumbnail-image-selected:hover {
