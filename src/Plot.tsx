@@ -13,7 +13,7 @@ export type PlotProps = {
 
 const Plot = ({plot, onThumbnailUpdate} : PlotProps) => {
   if (plot) {
-    // For developers: uncomment the code below to expose vega
+    // For developers: comment/uncomment the code below to hide/expose vega
     (window as any).vega = vega;
     switch (plot.type) {
       case "vega":
