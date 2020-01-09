@@ -65,14 +65,15 @@ export class App extends Component<{}, AppState> {
   }
 
   updateThumbnail = (index:number, thumbnailURL:string) => {
-    let plots = this.state.plots.slice();
-    plots[index].thumbnail = thumbnailURL;
-    this.setState((state) => (
-      {
+    this.setState((state) => {
+      let plots = this.state.plots.slice();
+      plots[index].thumbnail = thumbnailURL;
+      
+      return {
         ...state,
         plots: plots,
       }
-    ));
+    });
   }
 
   copyListener = (event: ClipboardEvent) => {
