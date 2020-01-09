@@ -23,6 +23,7 @@ export class App extends Component<{}, AppState> {
       index: 0
     };
 
+    // Expose addPlot and switchTo
     (window as any).addPlot = this.addPlot;
     (window as any).switchTo = this.switchTo;
   }
@@ -48,6 +49,21 @@ export class App extends Component<{}, AppState> {
     ));
   }
 
+  switchToFunc = (indexFunc: (oldIndex: number, state: AppState) => number) => {
+    this.setState((state) => {
+        let index = indexFunc(state.index, state);
+        if (index < 0 || index > this.state.plots.length - 1) { // do not switch if it causes out of bounds
+          return state;
+        } else {
+          return {
+            ...state,
+            index,
+          };
+        }
+      }
+    );
+  }
+
   updateThumbnail = (index:number, thumbnailURL:string) => {
     let plots = this.state.plots.slice();
     plots[index].thumbnail = thumbnailURL;
@@ -66,12 +82,59 @@ export class App extends Component<{}, AppState> {
     event.preventDefault();
   };
 
+  deleteCurrentPlot = () => {
+    this.setState((state) => {
+      let plots = state.plots.slice();
+      let index = state.index;
+      plots.splice(state.index, 1);
+      if (!plots[state.index]) {
+        if (plots.length === 0) {
+          index = 0;
+        } else {
+          index = plots.length - 1;
+        }
+      }
+      return {
+        ...state,
+        index,
+        plots,
+      };
+    });
+  };
+
+  keyDownListener = (event: KeyboardEvent) => {
+    if (event.isComposing || event.keyCode === 229) {
+      return;
+    }
+    
+    if (event.keyCode === 40 || event.keyCode === 39) {
+      // arrow down/right
+      
+      // Note that we cannot call switchTo since we are getting old index and writing the index back
+      this.switchToFunc((index) => (index + 1));
+    } else if (event.keyCode === 38 || event.keyCode === 37) {
+      // arrow up/left
+      this.switchToFunc((index) => (index - 1));
+    } else if (event.keyCode === 36) {
+      // home
+      this.switchTo(0);
+    } else if (event.keyCode === 35) {
+      // end
+      this.switchToFunc((_, state) => (state.plots.length - 1));
+    } else if (event.keyCode === 8 || event.keyCode === 46) {
+      // backspace/delete
+      this.deleteCurrentPlot();
+    }
+  }
+
   componentDidMount() {
     document.addEventListener('copy', this.copyListener);
+    document.addEventListener('keydown', this.keyDownListener);
   }
 
   componentWillUnmount() {
     document.removeEventListener('copy', this.copyListener);
+    document.removeEventListener('keydown', this.keyDownListener);
   }
 
   render = () => (
