@@ -59,6 +59,21 @@ export class App extends Component<{}, AppState> {
     ));
   }
 
+  copyListener = (event: ClipboardEvent) => {
+    if (event.clipboardData) {
+      event.clipboardData.setData('text/html', '<img src="' + encodeURI(this.state.plots[this.state.index].thumbnail) + '" />');
+    }
+    event.preventDefault();
+  };
+
+  componentDidMount() {
+    document.addEventListener('copy', this.copyListener);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('copy', this.copyListener);
+  }
+
   render = () => (
     <div className="App">
       <div className="left-panel">
