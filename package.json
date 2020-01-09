@@ -18,7 +18,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "buildcp": "react-scripts build && cp -R build/* ../ElectronDisplay.jl/assets/plotgallery",
+    "buildcp": "react-scripts build && rm -rf ../ElectronDisplay.jl/assets/plotgallery && cp -R build ../ElectronDisplay.jl/assets/plotgallery",
     "buildcpwin": "react-scripts build && rmdir %USERPROFILE%\\.julia\\dev\\ElectronDisplay\\assets\\plotgallery /s /q && xcopy /E /I .\\build %USERPROFILE%\\.julia\\dev\\ElectronDisplay\\assets\\plotgallery",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
