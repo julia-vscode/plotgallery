@@ -8,10 +8,11 @@ import { PlotData } from './App';
 
 export type PlotProps = {
     plot: PlotData | null,
-    onThumbnailUpdate: (thumbnailURL:string) => void
+    onThumbnailUpdate: (thumbnailURL: string) => void,
+    onInvalidPlot: (e: Error) => void,
 }
 
-const Plot = ({plot, onThumbnailUpdate} : PlotProps) => {
+const Plot = ({plot, onThumbnailUpdate, onInvalidPlot} : PlotProps) => {
   if (plot) {
     // For developers: comment/uncomment the code below to hide/expose vega
     (window as any).vega = vega;
@@ -19,21 +20,29 @@ const Plot = ({plot, onThumbnailUpdate} : PlotProps) => {
       case "vega":
         if (!plot.thumbnail) {
           // render a thumbnail if there is no thumbnail in the plot object
-          new vega.View(vega.parse(plot.data)).initialize().toCanvas().then(canvas =>
-            (onThumbnailUpdate(canvas.toDataURL()))
-          );
+          try {
+            new vega.View(vega.parse(plot.data)).initialize().toCanvas().then(canvas =>
+              (onThumbnailUpdate(canvas.toDataURL()))
+            );
+          } catch (e) {
+            console.warn("Error generating thumbnail for a vega plot:", e);
+          }
         }
         return (
-          <Vega spec={plot.data} className="vega-plot"/>
+          <Vega spec={plot.data} className="vega-plot" onError={onInvalidPlot} />
         );
       case "vega-lite":
         if (!plot.thumbnail) {
-          new vega.View(vega.parse(compile(plot.data as TopLevelSpec).spec)).initialize().toCanvas().then(canvas =>
-            (onThumbnailUpdate(canvas.toDataURL()))
-          );
+          try {
+            new vega.View(vega.parse(compile(plot.data as TopLevelSpec).spec)).initialize().toCanvas().then(canvas =>
+              (onThumbnailUpdate(canvas.toDataURL()))
+            );
+          } catch (e) {
+            console.warn("Error generating thumbnail for a vega-lite plot:", e);
+          }
         }
         return (
-          <VegaLite spec={plot.data} className="vegalite-plot"/>
+          <VegaLite spec={plot.data} className="vegalite-plot" onError={onInvalidPlot} />
         );
         
       case "image":

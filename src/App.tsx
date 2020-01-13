@@ -103,6 +103,26 @@ export class App extends Component<{}, AppState> {
     });
   };
 
+  deletePlot = (index: number) => {
+    // we delete the invalid plot
+    this.setState((state) => {
+      let plots = state.plots.slice();
+      plots.splice(index, 1);
+      if (!plots[state.index]) {
+        if (plots.length === 0) {
+          index = 0;
+        } else {
+          index = plots.length - 1;
+        }
+      }
+      return {
+        ...state,
+        index,
+        plots,
+      };
+    });
+  };
+
   keyDownListener = (event: KeyboardEvent) => {
     if (event.isComposing || event.keyCode === 229) {
       return;
@@ -144,7 +164,14 @@ export class App extends Component<{}, AppState> {
         {this.state.plots.map((_, index) => <Thumbnail key={index} index={index} thumbnailURL={this.state.plots[index].thumbnail} onClick={()=>{this.switchTo(index)}} selected={index===this.state.index} />)}
       </div>
       <div className="main-plot">
-        <Plot plot={this.state.plots[this.state.index] ? this.state.plots[this.state.index] : null} onThumbnailUpdate={(thumbnailURL) => this.updateThumbnail(this.state.index, thumbnailURL)}/>
+        <Plot
+          plot={this.state.plots[this.state.index] ? this.state.plots[this.state.index] : null}
+          onThumbnailUpdate={(thumbnailURL) => this.updateThumbnail(this.state.index, thumbnailURL)}
+          onInvalidPlot={(e: Error) => {
+            alert("We encountered the following error while displaying plot " + (this.state.index + 1) + ": " + e.toString());
+            this.deletePlot(this.state.index);
+          }}
+        />
       </div>
     </div>
   );
