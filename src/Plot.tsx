@@ -1,10 +1,9 @@
 import React from 'react';
 import { Vega, VegaLite } from 'react-vega';
-// import { VisualizationSpec } from 'vega-embed';
 import { vega } from 'vega-embed';
 import { compile, TopLevelSpec } from 'vega-lite';
 import { PlotData } from './App';
-
+import './Plot.css';
 
 export type PlotProps = {
     plot: PlotData | null,
@@ -21,9 +20,12 @@ const Plot = ({plot, onThumbnailUpdate, onInvalidPlot} : PlotProps) => {
         if (!plot.thumbnail) {
           // render a thumbnail if there is no thumbnail in the plot object
           try {
-            new vega.View(vega.parse(plot.data)).initialize().toCanvas().then(canvas =>
-              (onThumbnailUpdate(canvas.toDataURL()))
-            );
+            let view = new vega.View(vega.parse(plot.data)).initialize();
+            if ((view.width() as any) === "container" || (view.height() as any) === "container") { // The reason that we need to cast both return values to any is that although in function types they return a number, they do return string "container" in the case of "container" width/height
+              view.width(1000);
+              view.height(500);
+            }
+            view.toImageURL("png").then(onThumbnailUpdate);
           } catch (e) {
             console.warn("Error generating thumbnail for a vega plot:", e);
           }
@@ -34,9 +36,12 @@ const Plot = ({plot, onThumbnailUpdate, onInvalidPlot} : PlotProps) => {
       case "vega-lite":
         if (!plot.thumbnail) {
           try {
-            new vega.View(vega.parse(compile(plot.data as TopLevelSpec).spec)).initialize().toCanvas().then(canvas =>
-              (onThumbnailUpdate(canvas.toDataURL()))
-            );
+            let view = new vega.View(vega.parse(compile(plot.data as TopLevelSpec).spec)).initialize();
+            if ((view.width() as any) === "container" || (view.height() as any) === "container") { // The reason that we need to cast both return values to any is that although in function types they return a number, they do return string "container" in the case of "container" width/height
+              view.width(1000);
+              view.height(500);
+            }
+            view.toImageURL("png").then(onThumbnailUpdate);
           } catch (e) {
             console.warn("Error generating thumbnail for a vega-lite plot:", e);
           }

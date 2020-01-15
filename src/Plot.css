@@ -1,0 +1,5 @@
+.vega-plot, .vegalite-plot {
+    width: 90%;
+    height: 90%;
+    margin: 5%;
+}
