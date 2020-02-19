@@ -1,4 +1,7 @@
 import React from 'react';
+
+import Plotly from 'plotly.js'
+import PlotlyPlot from 'react-plotly.js';
 import { Vega, VegaLite } from 'react-vega';
 import { vega } from 'vega-embed';
 import { compile, TopLevelSpec } from 'vega-lite';
@@ -49,13 +52,30 @@ const Plot = ({plot, onThumbnailUpdate, onInvalidPlot} : PlotProps) => {
         return (
           <VegaLite spec={plot.data} className="vegalite-plot" onError={onInvalidPlot} />
         );
+      case "plotly":
+        let plotData = JSON.parse(plot.data);
         
+        if (!plot.thumbnail) {
+          Plotly.newPlot(document.createElement('div'), plotData.data, plotData.layout).then(function(gd) {
+            Plotly.toImage(gd, {height: 500, width: 500, format: 'png'}).then(onThumbnailUpdate);
+          });
+        }
+
+        plotData.layout["autosize"] = true;
+
+        return (<PlotlyPlot
+          style={{width: "100%", height: "100%"}}
+          data={plotData.data}
+          layout={plotData.layout}
+          config={{responsive: true}}
+        />);
       case "image":
         if (!plot.thumbnail) {
           onThumbnailUpdate(plot.data.toString());
         }
         return <img src={plot.data} alt="Plot"></img>
       default:
+        console.warn("Invalid plot type " + plot.type + " with data " + plot.data.toString());
         return <p>Unsupported plot type: {plot.type}</p>
     }
   }
