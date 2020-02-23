@@ -21,7 +21,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "buildcp": "react-scripts build && rm -rf ../ElectronDisplay.jl/assets/plotgallery && cp -R build ../ElectronDisplay.jl/assets/plotgallery",
+    "buildcp": "react-scripts build && rm -r ~/.julia/dev/ElectronDisplay/assets/plotgallery && cp -R build ~/.julia/dev/ElectronDisplay/assets/plotgallery",
+    "buildcpvs": "react-scripts build && rm -r ../julia-vscode/libs/plotgallery && cp -R build ../julia-vscode/libs/plotgallery",
     "buildcpwin": "react-scripts build && rmdir %USERPROFILE%\\.julia\\dev\\ElectronDisplay\\assets\\plotgallery /s /q && xcopy /E /I .\\build %USERPROFILE%\\.julia\\dev\\ElectronDisplay\\assets\\plotgallery",
     "buildcpvscwin": "react-scripts build && rmdir %USERPROFILE%\\source\\julia-vscode\\libs\\plotgallery /s /q && xcopy /E /I .\\build %USERPROFILE%\\source\\julia-vscode\\libs\\plotgallery",
     "test": "react-scripts test",

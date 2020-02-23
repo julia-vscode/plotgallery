@@ -23,9 +23,15 @@ export class App extends Component<{}, AppState> {
       index: 0
     };
 
-    // Expose addPlot and switchTo
+    // Expose functions
     (window as any).addPlot = this.addPlot;
     (window as any).switchTo = this.switchTo;
+    (window as any).previousPlot = this.previousPlot;
+    (window as any).nextPlot = this.nextPlot;
+    (window as any).firstPlot = this.firstPlot;
+    (window as any).lastPlot = this.lastPlot;
+    (window as any).deleteCurrentPlot = this.deleteCurrentPlot;
+    (window as any).deleteAllPlots = this.deleteAllPlots;
   }
 
   addPlot = (plot: PlotData, noSwitch: Boolean = false) => {
@@ -83,22 +89,28 @@ export class App extends Component<{}, AppState> {
     event.preventDefault();
   };
 
-  deleteCurrentPlot = () => {
+  nextPlot = () => {
+    this.switchToFunc((index) => (index + 1));
+  }
+
+  previousPlot = () => {
+    this.switchToFunc((index) => (index - 1));
+  }
+
+  firstPlot = () => {
+    this.switchTo(0);
+  }
+
+  lastPlot = () => {
+    this.switchToFunc((_, state) => (state.plots.length - 1));
+  }
+
+  deleteAllPlots = () => {
     this.setState((state) => {
-      let plots = state.plots.slice();
-      let index = state.index;
-      plots.splice(state.index, 1);
-      if (!plots[state.index]) {
-        if (plots.length === 0) {
-          index = 0;
-        } else {
-          index = plots.length - 1;
-        }
-      }
       return {
         ...state,
-        index,
-        plots,
+        index: 0,
+        plots: [],
       };
     });
   };
@@ -123,6 +135,26 @@ export class App extends Component<{}, AppState> {
     });
   };
 
+  deleteCurrentPlot = () => {
+    this.setState((state) => {
+      let plots = state.plots.slice();
+      let index = state.index;
+      plots.splice(state.index, 1);
+      if (!plots[state.index]) {
+        if (plots.length === 0) {
+          index = 0;
+        } else {
+          index = plots.length - 1;
+        }
+      }
+      return {
+        ...state,
+        index,
+        plots,
+      };
+    });
+  };
+
   keyDownListener = (event: KeyboardEvent) => {
     if (event.isComposing || event.keyCode === 229) {
       return;
@@ -132,16 +164,16 @@ export class App extends Component<{}, AppState> {
       // arrow down/right
       
       // Note that we cannot call switchTo since we are getting old index and writing the index back
-      this.switchToFunc((index) => (index + 1));
+      this.nextPlot()
     } else if (event.keyCode === 38 || event.keyCode === 37) {
       // arrow up/left
-      this.switchToFunc((index) => (index - 1));
+      this.previousPlot();
     } else if (event.keyCode === 36) {
       // home
-      this.switchTo(0);
+      this.firstPlot();
     } else if (event.keyCode === 35) {
       // end
-      this.switchToFunc((_, state) => (state.plots.length - 1));
+      this.lastPlot();
     } else if (event.keyCode === 8 || event.keyCode === 46) {
       // backspace/delete
       this.deleteCurrentPlot();
