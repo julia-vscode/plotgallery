@@ -13,6 +13,7 @@ export type PlotData = {
 type AppState = {
   plots: any[],
   index: number,
+  zoomFactor: number,
 }
 
 export class App extends Component<{}, AppState> {
@@ -20,8 +21,12 @@ export class App extends Component<{}, AppState> {
     super(props);
     this.state = {
       plots: [],
-      index: 0
+      index: 0,
+      zoomFactor: 1,
     };
+
+    // Expose whether we are using electron
+    (window as any).electron = this.electron;
 
     // Expose functions
     (window as any).addPlot = this.addPlot;
@@ -33,6 +38,8 @@ export class App extends Component<{}, AppState> {
     (window as any).deleteCurrentPlot = this.deleteCurrentPlot;
     (window as any).deleteAllPlots = this.deleteAllPlots;
   }
+
+  electron = (window.process && (window.process as any).type === 'renderer') ? eval('require')('electron') : null;
 
   addPlot = (plot: PlotData, noSwitch: Boolean = false) => {
     this.setState((state) => (
@@ -180,14 +187,31 @@ export class App extends Component<{}, AppState> {
     }
   }
 
+  resizeListener = (_: Event) => {
+    // handle zoom
+    if (this.electron) {
+      const { webFrame } = this.electron;
+      const zoomFactor = webFrame.getZoomFactor();
+      if (zoomFactor === 1) {
+        // reset
+        this.setState({zoomFactor: 1});
+      }
+      this.setState((state) => ({...state, zoomFactor: state.zoomFactor * zoomFactor}));
+      webFrame.setZoomFactor(1.001);
+      console.log("ZoomFactor", this.state.zoomFactor);
+    }
+  }
+
   componentDidMount() {
     document.addEventListener('copy', this.copyListener);
     document.addEventListener('keydown', this.keyDownListener);
+    window.addEventListener('resize', this.resizeListener);
   }
 
   componentWillUnmount() {
     document.removeEventListener('copy', this.copyListener);
     document.removeEventListener('keydown', this.keyDownListener);
+    document.addEventListener('resize', this.resizeListener);
   }
 
   render = () => (
@@ -203,6 +227,7 @@ export class App extends Component<{}, AppState> {
             alert("We encountered the following error while displaying plot " + (this.state.index + 1) + ": " + e.toString());
             this.deletePlot(this.state.index);
           }}
+          zoomFactor={this.state.zoomFactor}
         />
       </div>
     </div>
