@@ -37,6 +37,9 @@ export class App extends Component<{}, AppState> {
     (window as any).lastPlot = this.lastPlot;
     (window as any).deleteCurrentPlot = this.deleteCurrentPlot;
     (window as any).deleteAllPlots = this.deleteAllPlots;
+    (window as any).zoomIn = this.zoomIn;
+    (window as any).zoomOut = this.zoomOut;
+    (window as any).zoomReset = this.zoomReset;
   }
 
   electron = (window.process && (window.process as any).type === 'renderer') ? eval('require')('electron') : null;
@@ -187,31 +190,26 @@ export class App extends Component<{}, AppState> {
     }
   }
 
-  resizeListener = (_: Event) => {
-    // handle zoom
-    if (this.electron) {
-      const { webFrame } = this.electron;
-      const zoomFactor = webFrame.getZoomFactor();
-      if (zoomFactor === 1) {
-        // reset
-        this.setState({zoomFactor: 1});
-      }
-      this.setState((state) => ({...state, zoomFactor: state.zoomFactor * zoomFactor}));
-      webFrame.setZoomFactor(1.001);
-      console.log("ZoomFactor", this.state.zoomFactor);
-    }
+  zoomIn = () => {
+    this.setState((state) => ({...state, zoomFactor: state.zoomFactor * 1.25}));
+  }
+
+  zoomOut = () => {
+    this.setState((state) => ({...state, zoomFactor: state.zoomFactor / 1.25}));
+  }
+
+  zoomReset = () => {
+    this.setState((state) => ({...state, zoomFactor: 1}));
   }
 
   componentDidMount() {
     document.addEventListener('copy', this.copyListener);
     document.addEventListener('keydown', this.keyDownListener);
-    window.addEventListener('resize', this.resizeListener);
   }
 
   componentWillUnmount() {
     document.removeEventListener('copy', this.copyListener);
     document.removeEventListener('keydown', this.keyDownListener);
-    document.addEventListener('resize', this.resizeListener);
   }
 
   render = () => (
