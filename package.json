@@ -19,6 +19,7 @@
     "vega-lite": "4"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "buildcp": "react-scripts build && rm -r ~/.julia/dev/ElectronDisplay/assets/plotgallery && cp -R build ~/.julia/dev/ElectronDisplay/assets/plotgallery",
@@ -43,5 +44,8 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "./"
+  "homepage": "./",
+  "devDependencies": {
+    "source-map-explorer": "^2.3.1"
+  }
 }

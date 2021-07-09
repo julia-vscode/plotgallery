@@ -12,9 +12,10 @@ export type PlotProps = {
     plot: PlotData | null,
     onThumbnailUpdate: (thumbnailURL: string) => void,
     onInvalidPlot: (e: Error) => void,
+    zoomFactor: Number,
 }
 
-const Plot = ({plot, onThumbnailUpdate, onInvalidPlot} : PlotProps) => {
+const Plot = ({plot, onThumbnailUpdate, onInvalidPlot, zoomFactor} : PlotProps) => {
   if (plot) {
     // For developers: comment/uncomment the code below to hide/expose vega
     (window as any).vega = vega;
@@ -73,7 +74,7 @@ const Plot = ({plot, onThumbnailUpdate, onInvalidPlot} : PlotProps) => {
         if (!plot.thumbnail) {
           onThumbnailUpdate(plot.data.toString());
         }
-        return <img src={plot.data} alt="Plot"></img>
+        return <img src={plot.data} style={{transform: `scale(${zoomFactor})`, transformOrigin: "top left"}} alt="Plot"></img>
       default:
         console.warn("Invalid plot type " + plot.type + " with data " + plot.data.toString());
         return <p>Unsupported plot type: {plot.type}</p>

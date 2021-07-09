@@ -13,6 +13,7 @@ export type PlotData = {
 type AppState = {
   plots: any[],
   index: number,
+  zoomFactor: number,
 }
 
 export class App extends Component<{}, AppState> {
@@ -20,8 +21,12 @@ export class App extends Component<{}, AppState> {
     super(props);
     this.state = {
       plots: [],
-      index: 0
+      index: 0,
+      zoomFactor: 1,
     };
+
+    // Expose whether we are using electron
+    (window as any).electron = this.electron;
 
     // Expose functions
     (window as any).addPlot = this.addPlot;
@@ -32,7 +37,12 @@ export class App extends Component<{}, AppState> {
     (window as any).lastPlot = this.lastPlot;
     (window as any).deleteCurrentPlot = this.deleteCurrentPlot;
     (window as any).deleteAllPlots = this.deleteAllPlots;
+    (window as any).zoomIn = this.zoomIn;
+    (window as any).zoomOut = this.zoomOut;
+    (window as any).zoomReset = this.zoomReset;
   }
+
+  electron = (window.process && (window.process as any).type === 'renderer') ? eval('require')('electron') : null;
 
   addPlot = (plot: PlotData, noSwitch: Boolean = false) => {
     this.setState((state) => (
@@ -180,6 +190,18 @@ export class App extends Component<{}, AppState> {
     }
   }
 
+  zoomIn = () => {
+    this.setState((state) => ({...state, zoomFactor: state.zoomFactor * 1.25}));
+  }
+
+  zoomOut = () => {
+    this.setState((state) => ({...state, zoomFactor: state.zoomFactor / 1.25}));
+  }
+
+  zoomReset = () => {
+    this.setState((state) => ({...state, zoomFactor: 1}));
+  }
+
   componentDidMount() {
     document.addEventListener('copy', this.copyListener);
     document.addEventListener('keydown', this.keyDownListener);
@@ -203,6 +225,7 @@ export class App extends Component<{}, AppState> {
             alert("We encountered the following error while displaying plot " + (this.state.index + 1) + ": " + e.toString());
             this.deletePlot(this.state.index);
           }}
+          zoomFactor={this.state.zoomFactor}
         />
       </div>
     </div>
